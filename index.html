@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AU to US English Translator</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card-bg: rgba(30, 41, 59, 0.7);
+        --card-border: rgba(255, 255, 255, 0.1);
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --accent-1: #3b82f6;
+        --accent-2: #8b5cf6;
+        --success: #10b981;
+        --error: #ef4444;
+        --warning: #f59e0b;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg);
+        color: var(--text-main);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background-image: radial-gradient(
+            circle at 15% 50%,
+            rgba(59, 130, 246, 0.15),
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 85% 30%,
+            rgba(139, 92, 246, 0.15),
+            transparent 25%
+          );
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(to right, var(--accent-1), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+      }
+
+      .header p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+      }
+
+      .card {
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--card-border);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      input[type="text"],
+      input[type="password"],
+      input[type="number"] {
+        width: 100%;
+        padding: 0.75rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid var(--card-border);
+        border-radius: 0.5rem;
+        color: var(--text-main);
+        font-family: inherit;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--accent-1);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-family: inherit;
+        font-size: 1rem;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+      }
+
+      .btn-primary {
+        background: linear-gradient(to right, var(--accent-1), var(--accent-2));
+        color: white;
+      }
+
+      .btn-primary:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-main);
+      }
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .btn-success {
+        background: var(--success);
+        color: white;
+      }
+      .btn-success:hover {
+        opacity: 0.9;
+      }
+
+      .row {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+        flex-wrap: wrap;
+      }
+      .col {
+        flex: 1;
+        min-width: 140px;
+      }
+
+      .file-drop-area {
+        border: 2px dashed var(--card-border);
+        border-radius: 1rem;
+        padding: 3rem 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: rgba(15, 23, 42, 0.3);
+      }
+
+      .file-drop-area:hover,
+      .file-drop-area.dragover {
+        border-color: var(--accent-1);
+        background: rgba(59, 130, 246, 0.05);
+      }
+
+      .file-drop-area input[type="file"] {
+        display: none;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .stat-card {
+        background: rgba(15, 23, 42, 0.5);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid var(--card-border);
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .progress-container {
+        height: 8px;
+        background: rgba(15, 23, 42, 0.8);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+      }
+
+      .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(to right, var(--accent-1), var(--accent-2));
+        transition: width 0.3s ease;
+      }
+
+      .rate-limit-panel {
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.35);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .rate-limit-panel .rl-text {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        color: var(--warning);
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .rl-timer-bar-container {
+        height: 8px;
+        background: rgba(15, 23, 42, 0.8);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .rl-timer-bar {
+        height: 100%;
+        width: 100%;
+        background: var(--warning);
+        transition: width 1s linear;
+      }
+
+      .log-container {
+        height: 250px;
+        background: rgba(15, 23, 42, 0.8);
+        border-radius: 0.5rem;
+        border: 1px solid var(--card-border);
+        padding: 1rem;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 0.85rem;
+      }
+
+      .log-entry {
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .log-entry:last-child {
+        border-bottom: none;
+      }
+
+      .log-success {
+        color: var(--success);
+      }
+      .log-error {
+        color: var(--error);
+      }
+      .log-info {
+        color: var(--accent-1);
+      }
+      .log-warning {
+        color: var(--warning);
+      }
+
+      .original-text {
+        color: var(--text-muted);
+        margin-bottom: 0.25rem;
+      }
+      .translated-text {
+        color: #e2e8f0;
+      }
+
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .hint {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>AU to US English Translator</h1>
+        <p>100% Free • Preserves HTML & Structure • Powered by Gemini</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">1. Setup API Key</div>
+        <div class="row">
+          <div class="col" style="flex: 3">
+            <div class="form-group" style="margin-bottom: 0">
+              <input
+                type="password"
+                id="api-key"
+                placeholder="Enter your free Gemini API Key from Google AI Studio"
+              />
+            </div>
+          </div>
+          <div class="col" style="flex: 1">
+            <button
+              id="save-key-btn"
+              class="btn btn-secondary"
+              style="width: 100%"
+            >
+              Save Key
+            </button>
+          </div>
+        </div>
+        <div style="margin-top: 0.5rem" class="hint">
+          Don't have a key? Get one for free at
+          <a
+            href="https://aistudio.google.com/"
+            target="_blank"
+            style="color: var(--accent-1)"
+            >Google AI Studio</a
+          >. (Your key is saved locally in your browser).
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">2. Upload CSV</div>
+        <div class="hint" style="margin-bottom: 1rem">
+          Expected columns (in order): <strong>Original ID</strong>,
+          <strong>Source Content (AU)</strong>, <strong>EN-US</strong>. The
+          first row is treated as the header and is replaced with these fixed
+          names. Any extra columns beyond the first three are ignored.
+        </div>
+        <div id="drop-area" class="file-drop-area">
+          <input type="file" id="file-input" accept=".csv" />
+          <div style="margin-bottom: 1rem">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="color: var(--text-muted)"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <h3 style="margin-bottom: 0.5rem">Drag & Drop your CSV file here</h3>
+          <p style="color: var(--text-muted); margin-bottom: 1.5rem">
+            or click to browse from your computer
+          </p>
+          <div id="file-info" class="hidden">
+            <strong id="file-name" style="color: var(--accent-1)"></strong>
+            (<span id="file-rows"></span>)
+          </div>
+        </div>
+      </div>
+
+      <div id="processing-section" class="hidden">
+        <div class="card">
+          <div class="card-title">3. Processing Settings</div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label>Batch Size (Rows per API Call)</label>
+                <input
+                  type="number"
+                  id="batch-size"
+                  value="5"
+                  min="1"
+                  max="20"
+                />
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Min Delay Between Batches (ms)</label>
+                <input
+                  type="number"
+                  id="delay-ms"
+                  value="1500"
+                  min="0"
+                  step="500"
+                />
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Requests per Minute Limit</label>
+                <input
+                  type="number"
+                  id="rpm-limit"
+                  value="15"
+                  min="1"
+                  max="1000"
+                />
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Gemini Model</label>
+                <input type="text" id="model-name" value="gemini-2.5-flash" />
+              </div>
+            </div>
+          </div>
+          <div class="hint">
+            The app tracks real API calls in a rolling 60-second window. It
+            keeps processing as fast as your RPM limit allows, and only pauses
+            (with a countdown) once that budget is actually used up — it will
+            also auto-detect a live 429 rate-limit response from Gemini and wait
+            it out automatically.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">4. Translation Progress</div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" id="stat-processed">0</div>
+              <div class="stat-label">Processed</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="stat-remaining">0</div>
+              <div class="stat-label">Remaining</div>
+            </div>
+            <div class="stat-card">
+              <div
+                class="stat-value"
+                id="stat-errors"
+                style="color: var(--error)"
+              >
+                0
+              </div>
+              <div class="stat-label">Errors</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="stat-rate">0/min</div>
+              <div class="stat-label">Speed</div>
+            </div>
+          </div>
+
+          <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+
+          <div id="rate-limit-timer" class="rate-limit-panel hidden">
+            <div class="rl-text">
+              <span>⏳ Rate limit reached — resuming automatically</span>
+              <span><span id="timer-seconds">60</span>s</span>
+            </div>
+            <div class="rl-timer-bar-container">
+              <div id="timer-bar" class="rl-timer-bar"></div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button id="start-btn" class="btn btn-primary">
+              Start Processing
+            </button>
+            <button id="pause-btn" class="btn btn-secondary hidden">
+              Pause Processing
+            </button>
+            <button
+              id="download-btn"
+              class="btn btn-success"
+              style="margin-left: auto"
+            >
+              Download Excel (.xlsx)
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Live Log</div>
+          <div id="log-console" class="log-container">
+            <div class="log-entry log-info">
+              System ready. Waiting for file and API key...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const FIXED_HEADERS = ["Original ID", "Source Content (AU)", "EN-US"];
+
+      const UI = {
+        apiKeyInput: document.getElementById("api-key"),
+        saveKeyBtn: document.getElementById("save-key-btn"),
+        dropArea: document.getElementById("drop-area"),
+        fileInput: document.getElementById("file-input"),
+        fileInfo: document.getElementById("file-info"),
+        fileName: document.getElementById("file-name"),
+        fileRows: document.getElementById("file-rows"),
+        processingSection: document.getElementById("processing-section"),
+        startBtn: document.getElementById("start-btn"),
+        pauseBtn: document.getElementById("pause-btn"),
+        downloadBtn: document.getElementById("download-btn"),
+        progressBar: document.getElementById("progress-bar"),
+        statProcessed: document.getElementById("stat-processed"),
+        statRemaining: document.getElementById("stat-remaining"),
+        statErrors: document.getElementById("stat-errors"),
+        statRate: document.getElementById("stat-rate"),
+        logConsole: document.getElementById("log-console"),
+        batchSizeInput: document.getElementById("batch-size"),
+        delayInput: document.getElementById("delay-ms"),
+        rpmInput: document.getElementById("rpm-limit"),
+        modelInput: document.getElementById("model-name"),
+        rlTimerPanel: document.getElementById("rate-limit-timer"),
+        rlTimerSeconds: document.getElementById("timer-seconds"),
+        rlTimerBar: document.getElementById("timer-bar"),
+      };
+
+      let state = {
+        csvData: [], // each row: [id, auText, usText]
+        headers: FIXED_HEADERS.slice(),
+        isProcessing: false,
+        isPaused: false,
+        currentIndex: 0,
+        processedCount: 0,
+        errorCount: 0,
+        startTime: null,
+        apiKey: localStorage.getItem("gemini_api_key") || "",
+        requestTimestamps: [], // ms timestamps of API calls in the last 60s
+        countdownInterval: null,
+        consecutiveRateLimitHits: 0,
+      };
+
+      // Initialize
+      if (state.apiKey) {
+        UI.apiKeyInput.value = state.apiKey;
+      }
+
+      // Safety net: nothing should ever fail silently. Any uncaught error
+      // or rejected promise anywhere in the app gets written to the Live
+      // Log so the UI never just "sits there" with no explanation.
+      window.addEventListener("error", (e) => {
+        log(`Unexpected error: ${e.message}`, "error");
+        if (state.isProcessing) pauseProcessing(true);
+      });
+      window.addEventListener("unhandledrejection", (e) => {
+        const msg =
+          (e.reason && e.reason.message) || String(e.reason) || "Unknown error";
+        log(`Unexpected error: ${msg}`, "error");
+        if (state.isProcessing) pauseProcessing(true);
+      });
+
+      UI.saveKeyBtn.addEventListener("click", () => {
+        const key = UI.apiKeyInput.value.trim();
+        if (key) {
+          localStorage.setItem("gemini_api_key", key);
+          state.apiKey = key;
+          log("API Key saved to local storage.", "info");
+        }
+      });
+
+      // File Upload Handlers
+      UI.dropArea.addEventListener("click", () => UI.fileInput.click());
+      UI.dropArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        UI.dropArea.classList.add("dragover");
+      });
+      UI.dropArea.addEventListener("dragleave", () => {
+        UI.dropArea.classList.remove("dragover");
+      });
+      UI.dropArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        UI.dropArea.classList.remove("dragover");
+        if (e.dataTransfer.files.length) {
+          handleFile(e.dataTransfer.files[0]);
+        }
+      });
+      UI.fileInput.addEventListener("change", (e) => {
+        if (e.target.files.length) {
+          handleFile(e.target.files[0]);
+        }
+      });
+
+      function handleFile(file) {
+        if (!file.name.toLowerCase().endsWith(".csv")) {
+          alert("Please upload a CSV file.");
+          return;
+        }
+
+        Papa.parse(file, {
+          header: false,
+          skipEmptyLines: true,
+          complete: function (results) {
+            const data = results.data;
+            if (data.length < 1) {
+              alert("CSV file appears empty or invalid.");
+              return;
+            }
+
+            // Row 0 is always treated as the header row and replaced
+            // with the fixed schema: Original ID | Source Content (AU) | EN-US
+            state.headers = FIXED_HEADERS.slice();
+
+            const rawRows = data.slice(1);
+
+            // Force every row to exactly 3 columns. Any columns beyond
+            // index 2 are dropped; missing columns are padded with "".
+            state.csvData = rawRows
+              .filter((row) => row.length > 0 && row.join("").trim() !== "")
+              .map((row) => [
+                (row[0] || "").toString().trim(),
+                (row[1] || "").toString(),
+                (row[2] || "").toString(),
+              ]);
+
+            if (state.csvData.length === 0) {
+              alert("No data rows found in this CSV.");
+              return;
+            }
+
+            UI.fileName.textContent = file.name;
+            UI.fileRows.textContent = `${state.csvData.length} rows loaded`;
+            UI.fileInfo.classList.remove("hidden");
+            UI.processingSection.classList.remove("hidden");
+
+            // Column 2 (index 2) is EN-US — count already-translated rows
+            state.processedCount = state.csvData.filter(
+              (row) => row[2] && row[2].trim() !== ""
+            ).length;
+            state.currentIndex = 0;
+            state.errorCount = 0;
+            state.requestTimestamps = [];
+            state.consecutiveRateLimitHits = 0;
+            state.startTime = null;
+
+            UI.startBtn.disabled = false;
+            UI.startBtn.textContent = "Start Processing";
+
+            updateStats();
+            log(
+              `Loaded file: ${file.name} with ${state.csvData.length} rows. Found ${state.processedCount} already translated.`,
+              "info"
+            );
+          },
+        });
+      }
+
+      function log(msg, type = "info", original = null) {
+        const entry = document.createElement("div");
+        entry.className = `log-entry log-${type}`;
+
+        if (original) {
+          const origDiv = document.createElement("div");
+          origDiv.className = "original-text";
+          origDiv.textContent = `AU: ${original}`;
+          entry.appendChild(origDiv);
+
+          const transDiv = document.createElement("div");
+          transDiv.className = "translated-text";
+          transDiv.textContent = `US: ${msg}`;
+          entry.appendChild(transDiv);
+        } else {
+          entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        }
+
+        UI.logConsole.appendChild(entry);
+        UI.logConsole.scrollTop = UI.logConsole.scrollHeight;
+      }
+
+      function updateStats() {
+        UI.statProcessed.textContent = state.processedCount;
+        UI.statRemaining.textContent =
+          state.csvData.length - state.processedCount;
+        UI.statErrors.textContent = state.errorCount;
+
+        const progress = state.csvData.length
+          ? (state.processedCount / state.csvData.length) * 100
+          : 0;
+        UI.progressBar.style.width = `${progress}%`;
+
+        if (state.startTime && state.processedCount > 0) {
+          const elapsed = (Date.now() - state.startTime) / 1000 / 60; // minutes
+          if (elapsed > 0) {
+            const rate = Math.round(state.processedCount / elapsed);
+            UI.statRate.textContent = `${rate}/min`;
+          }
+        }
+      }
+
+      // ---------- Rate limiter (rolling 60s window) ----------
+
+      function pruneTimestamps() {
+        const cutoff = Date.now() - 60000;
+        state.requestTimestamps = state.requestTimestamps.filter(
+          (t) => t > cutoff
+        );
+      }
+
+      // Returns 0 if a request can be made right now, otherwise ms to wait.
+      function getWaitTimeMs(rpmLimit) {
+        pruneTimestamps();
+        if (state.requestTimestamps.length < rpmLimit) return 0;
+        const oldest = Math.min(...state.requestTimestamps);
+        const wait = 60000 - (Date.now() - oldest) + 250; // small buffer
+        return Math.max(wait, 0);
+      }
+
+      function recordRequest() {
+        state.requestTimestamps.push(Date.now());
+      }
+
+      // ---------- Countdown timer UI ----------
+
+      function startCountdown(ms, onComplete) {
+        clearInterval(state.countdownInterval);
+        const totalSec = Math.max(1, Math.ceil(ms / 1000));
+        let remaining = totalSec;
+
+        UI.rlTimerPanel.classList.remove("hidden");
+        UI.rlTimerSeconds.textContent = remaining;
+        UI.rlTimerBar.style.width = "100%";
+
+        state.countdownInterval = setInterval(() => {
+          remaining -= 1;
+          const clamped = Math.max(remaining, 0);
+          UI.rlTimerSeconds.textContent = clamped;
+          UI.rlTimerBar.style.width = `${(clamped / totalSec) * 100}%`;
+
+          if (remaining <= 0) {
+            clearInterval(state.countdownInterval);
+            state.countdownInterval = null;
+            UI.rlTimerPanel.classList.add("hidden");
+            onComplete();
+          }
+        }, 1000);
+      }
+
+      function stopCountdown() {
+        clearInterval(state.countdownInterval);
+        state.countdownInterval = null;
+        UI.rlTimerPanel.classList.add("hidden");
+      }
+
+      // ---------- Processing loop ----------
+
+      async function processBatch() {
+        try {
+          await processBatchInner();
+        } catch (err) {
+          log(`Fatal error in processing loop: ${err.message}`, "error");
+          pauseProcessing(true);
+        }
+      }
+
+      async function processBatchInner() {
+        if (!state.isProcessing || state.isPaused) return;
+
+        const batchSize = parseInt(UI.batchSizeInput.value) || 5;
+        const delayMs = Math.max(parseInt(UI.delayInput.value) || 0, 0);
+        const rpmLimit = Math.max(parseInt(UI.rpmInput.value) || 15, 1);
+        const model = (UI.modelInput.value || "gemini-2.5-flash").trim();
+
+        // Find next unset rows
+        let batch = [];
+        let batchIndices = [];
+
+        while (
+          batch.length < batchSize &&
+          state.currentIndex < state.csvData.length
+        ) {
+          const row = state.csvData[state.currentIndex];
+          if (
+            row[1] &&
+            row[1].trim() !== "" &&
+            (!row[2] || row[2].trim() === "")
+          ) {
+            batch.push(row[1]);
+            batchIndices.push(state.currentIndex);
+          }
+          state.currentIndex++;
+        }
+
+        if (batch.length === 0) {
+          if (state.currentIndex >= state.csvData.length) {
+            finishProcessing();
+          } else {
+            setTimeout(processBatch, 50);
+          }
+          return;
+        }
+
+        // Check the rolling rate-limit budget BEFORE calling the API.
+        const waitMs = getWaitTimeMs(rpmLimit);
+        if (waitMs > 0) {
+          // Put these rows back so they're retried after the wait.
+          state.currentIndex = Math.min(...batchIndices);
+          log(
+            `Rate limit budget used (${rpmLimit}/min). Waiting ${Math.ceil(
+              waitMs / 1000
+            )}s before continuing...`,
+            "warning"
+          );
+          startCountdown(waitMs, () => {
+            if (state.isProcessing && !state.isPaused) processBatch();
+          });
+          return;
+        }
+
+        log(`Processing batch of ${batch.length} rows...`, "info");
+        recordRequest();
+
+        try {
+          const translations = await callGemini(batch, state.apiKey, model);
+
+          if (
+            !Array.isArray(translations) ||
+            translations.length !== batch.length
+          ) {
+            throw new Error(
+              `API returned invalid format. Expected array of length ${
+                batch.length
+              }, got ${
+                Array.isArray(translations)
+                  ? translations.length
+                  : typeof translations
+              }`
+            );
+          }
+
+          for (let i = 0; i < batch.length; i++) {
+            const idx = batchIndices[i];
+            state.csvData[idx][2] = translations[i];
+            state.processedCount++;
+            log(translations[i], "success", batch[i]);
+          }
+
+          if (!state.startTime) state.startTime = Date.now();
+          state.consecutiveRateLimitHits = 0;
+          updateStats();
+
+          if (state.currentIndex < state.csvData.length) {
+            setTimeout(processBatch, delayMs);
+          } else {
+            finishProcessing();
+          }
+        } catch (err) {
+          console.error(err);
+
+          if (err.isRateLimit) {
+            state.consecutiveRateLimitHits =
+              (state.consecutiveRateLimitHits || 0) + 1;
+            state.currentIndex = Math.min(...batchIndices);
+
+            if (state.consecutiveRateLimitHits >= 3) {
+              // The same 429 keeps happening even after waiting — this is
+              // almost never a transient per-minute limit at that point.
+              // Common causes: the model name is invalid/deprecated, or
+              // the daily quota (RPD) is exhausted (which won't clear by
+              // waiting a minute). Stop looping and surface the real error.
+              log(
+                `Still getting 429 after ${state.consecutiveRateLimitHits} attempts in a row. This usually means the model name is wrong/deprecated, or your daily quota is used up (waiting won't fix that). Last error: ${err.message}`,
+                "error"
+              );
+              pauseProcessing(true);
+            } else {
+              const wait = err.retryAfterMs || 60000;
+              log(
+                `Gemini rate limit hit (429): ${
+                  err.message
+                }. Waiting ${Math.ceil(wait / 1000)}s before retrying...`,
+                "warning"
+              );
+              startCountdown(wait, () => {
+                if (state.isProcessing && !state.isPaused) processBatch();
+              });
+            }
+          } else {
+            state.errorCount++;
+            updateStats();
+            log(`Error: ${err.message}`, "error");
+            state.currentIndex = Math.min(...batchIndices);
+            pauseProcessing(true);
+          }
+        }
+      }
+
+      async function callGemini(texts, apiKey, model) {
+        if (!apiKey) {
+          const err = new Error("Missing API key.");
+          throw err;
+        }
+        model = model || "gemini-2.5-flash";
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
+          model
+        )}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+        const prompt = `You are an expert editor translating Australian English to American English.
+Translate the following texts from AU English to US English.
+CRITICAL RULES:
+1. Preserve ALL HTML tags exactly as they are.
+2. Preserve all placeholders like "....", "........", numbers, and special characters.
+3. Preserve the exact casing and punctuation.
+4. ONLY change AU spelling/terms to US spelling (e.g., analyse -> analyze, colour -> color).
+5. Do not translate terms like "superannuation" or "BAS", leave them.
+
+Respond ONLY with a valid JSON array of strings, where each string is the translated text in the exact same order as the input. Do not include markdown blocks like \`\`\`json. Just the JSON array.
+
+Inputs:
+${texts.map((t, i) => `${i + 1}. ${JSON.stringify(t)}`).join("\n")}`;
+
+        let response;
+        try {
+          response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: {
+                temperature: 0.1,
+                responseMimeType: "application/json",
+                responseSchema: {
+                  type: "ARRAY",
+                  items: { type: "STRING" },
+                },
+              },
+            }),
+          });
+        } catch (networkErr) {
+          throw new Error(
+            `Network error calling Gemini API: ${networkErr.message}`
+          );
+        }
+
+        if (!response.ok) {
+          const errText = await response.text();
+
+          if (response.status === 429) {
+            let retryAfterMs = null;
+            try {
+              const errJson = JSON.parse(errText);
+              const details = errJson?.error?.details || [];
+              const retryInfo = details.find((d) =>
+                (d["@type"] || "").includes("RetryInfo")
+              );
+              if (retryInfo?.retryDelay) {
+                const secs = parseFloat(
+                  String(retryInfo.retryDelay).replace("s", "")
+                );
+                if (!isNaN(secs)) retryAfterMs = secs * 1000 + 1000;
+              }
+            } catch (e) {
+              // ignore parse errors, fall back to default below
+            }
+            const rlErr = new Error(
+              `Rate limit exceeded (429): ${errText.slice(0, 400)}`
+            );
+            rlErr.isRateLimit = true;
+            rlErr.retryAfterMs = retryAfterMs || 60000;
+            throw rlErr;
+          }
+
+          throw new Error(
+            `API Error ${response.status}: ${errText.slice(0, 300)}`
+          );
+        }
+
+        const data = await response.json();
+
+        const candidate = data?.candidates?.[0];
+        if (!candidate) {
+          throw new Error(
+            `No candidates returned by the API. Full response: ${JSON.stringify(
+              data
+            ).slice(0, 300)}`
+          );
+        }
+
+        // If the model was blocked/cut off, surface that clearly instead
+        // of throwing an opaque JSON parse error.
+        if (candidate.finishReason && candidate.finishReason !== "STOP") {
+          throw new Error(
+            `Gemini stopped generating (finishReason: ${candidate.finishReason}). Try a smaller batch size.`
+          );
+        }
+
+        const resultText = candidate?.content?.parts?.[0]?.text;
+        if (!resultText) {
+          throw new Error("Empty response text from Gemini.");
+        }
+
+        try {
+          return JSON.parse(resultText);
+        } catch (e) {
+          throw new Error(
+            `Could not parse Gemini response as JSON: ${resultText.slice(
+              0,
+              200
+            )}`
+          );
+        }
+      }
+
+      UI.startBtn.addEventListener("click", () => {
+        log("Start button clicked.", "info");
+        try {
+          if (!UI.apiKeyInput.value.trim()) {
+            alert("Please enter your Gemini API key first.");
+            UI.apiKeyInput.focus();
+            log("Blocked: no API key entered.", "error");
+            return;
+          }
+          if (state.csvData.length === 0) {
+            alert("Please upload a CSV file first.");
+            log("Blocked: no CSV loaded.", "error");
+            return;
+          }
+          if (state.processedCount >= state.csvData.length) {
+            alert("All rows already processed!");
+            log("Blocked: all rows already processed.", "info");
+            return;
+          }
+
+          state.apiKey = UI.apiKeyInput.value.trim();
+          localStorage.setItem("gemini_api_key", state.apiKey);
+          state.isProcessing = true;
+          state.isPaused = false;
+
+          if (!state.startTime) state.startTime = Date.now();
+
+          UI.startBtn.classList.add("hidden");
+          UI.pauseBtn.classList.remove("hidden");
+
+          log("Started processing...", "info");
+          processBatch().catch((err) => {
+            log(`Fatal error in processing loop: ${err.message}`, "error");
+            pauseProcessing(true);
+          });
+        } catch (err) {
+          log(`Fatal error on start: ${err.message}`, "error");
+        }
+      });
+
+      UI.pauseBtn.addEventListener("click", () => pauseProcessing(false));
+
+      function pauseProcessing(isError = false) {
+        state.isPaused = true;
+        state.isProcessing = false;
+        stopCountdown();
+
+        UI.startBtn.classList.remove("hidden");
+        UI.startBtn.disabled = false;
+        UI.startBtn.textContent = "Resume Processing";
+        UI.pauseBtn.classList.add("hidden");
+
+        if (isError) {
+          log(
+            "Processing paused due to an error. Click Resume to try again.",
+            "error"
+          );
+        } else {
+          log("Processing paused.", "info");
+        }
+      }
+
+      function finishProcessing() {
+        state.isProcessing = false;
+        stopCountdown();
+        UI.startBtn.classList.remove("hidden");
+        UI.startBtn.textContent = "Finished";
+        UI.startBtn.disabled = true;
+        UI.pauseBtn.classList.add("hidden");
+        log("Processing complete!", "success");
+      }
+
+      UI.downloadBtn.addEventListener("click", () => {
+        if (state.csvData.length === 0) return;
+
+        log("Preparing Excel download...", "info");
+
+        const wsData = [state.headers, ...state.csvData];
+
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Translations");
+
+        const originalName = UI.fileName.textContent.replace(/\.csv$/i, "");
+        XLSX.writeFile(wb, `${originalName}_Translated.xlsx`);
+
+        log("Excel file downloaded.", "success");
+      });
+    </script>
+  </body>
+</html>
