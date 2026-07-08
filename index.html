@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AU to US English Translator</title>
+    <title>Content Translator</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -336,6 +336,177 @@
         display: none !important;
       }
 
+      /* ===== Language Selector Styles ===== */
+
+      .language-selector-row {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .language-selector-row .col {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .language-select {
+        width: 100%;
+        padding: 0.75rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid var(--card-border);
+        border-radius: 0.5rem;
+        color: var(--text-main);
+        font-family: inherit;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: border-color 0.2s, opacity 0.2s;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        padding-right: 2.5rem;
+      }
+
+      .language-select:focus {
+        outline: none;
+        border-color: var(--accent-1);
+      }
+
+      .language-select:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .language-select option {
+        background: #1e293b;
+        color: var(--text-main);
+      }
+
+      .lang-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 1.6rem;
+        color: var(--text-muted);
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        min-width: 40px;
+      }
+
+      .lang-warning {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1rem;
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 0.5rem;
+        color: var(--warning);
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-top: 0.75rem;
+        animation: fadeInSlide 0.3s ease;
+      }
+
+      .lang-success {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1rem;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 0.5rem;
+        color: var(--success);
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-top: 0.75rem;
+        animation: fadeInSlide 0.3s ease;
+      }
+
+      @keyframes fadeInSlide {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .file-drop-area.disabled-drop {
+        opacity: 0.4;
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+
+      .header-info-box {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: rgba(59, 130, 246, 0.08);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 0.5rem;
+        color: var(--accent-1);
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-top: 1rem;
+      }
+
+      .header-info-box .info-icon {
+        flex-shrink: 0;
+        font-size: 1rem;
+        margin-top: 1px;
+      }
+
+      /* ===== Custom Instructions Styles ===== */
+
+      .custom-instructions-input {
+        width: 100%;
+        padding: 0.75rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid var(--card-border);
+        border-radius: 0.5rem;
+        color: var(--text-main);
+        font-family: inherit;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+        resize: vertical;
+        min-height: 70px;
+        max-height: 200px;
+        line-height: 1.5;
+      }
+
+      .custom-instructions-input::placeholder {
+        color: var(--text-muted);
+        opacity: 0.6;
+      }
+
+      .custom-instructions-input:focus {
+        outline: none;
+        border-color: var(--accent-1);
+      }
+
+      .char-counter {
+        text-align: right;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .char-counter.near-limit {
+        color: var(--warning);
+      }
+
+      .char-counter.at-limit {
+        color: var(--error);
+        font-weight: 600;
+      }
+
       /* ===== Model Pool Styles ===== */
 
       .model-pool-summary {
@@ -504,7 +675,7 @@
   <body>
     <div class="container">
       <div class="header">
-        <h1>AU to US English Translator</h1>
+        <h1>Content Translator</h1>
         <p>
           100% Free • Preserves HTML & Structure • Multi-Model Powered by Gemini
           Flash
@@ -544,15 +715,92 @@
         </div>
       </div>
 
+      <!-- Language Selection -->
       <div class="card">
-        <div class="card-title">2. Upload CSV</div>
-        <div class="hint" style="margin-bottom: 1rem">
-          Expected columns (in order): <strong>Original ID</strong>,
-          <strong>Source Content (AU)</strong>, <strong>EN-US</strong>. The
-          first row is treated as the header and is replaced with these fixed
-          names. Any extra columns beyond the first three are ignored.
+        <div class="card-title">2. Select Languages</div>
+        <div class="language-selector-row">
+          <div class="col">
+            <div class="form-group">
+              <label>Source Language</label>
+              <select id="source-lang" class="language-select">
+                <option value="" disabled selected>
+                  — Select source language —
+                </option>
+                <option value="en-AU">English (Australia)</option>
+                <option value="en-US">English (United States)</option>
+                <option value="en-GB">English (United Kingdom)</option>
+                <option value="en-IN">English (India)</option>
+                <option value="fr-FR">French</option>
+                <option value="de-DE">German</option>
+              </select>
+            </div>
+          </div>
+          <div class="lang-arrow">→</div>
+          <div class="col">
+            <div class="form-group">
+              <label>Target Language</label>
+              <select id="target-lang" class="language-select" disabled>
+                <option value="" disabled selected>
+                  — Select target language —
+                </option>
+                <option value="en-AU">English (Australia)</option>
+                <option value="en-US">English (United States)</option>
+                <option value="en-GB">English (United Kingdom)</option>
+                <option value="en-IN">English (India)</option>
+                <option value="fr-FR">French</option>
+                <option value="de-DE">German</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <div id="drop-area" class="file-drop-area">
+        <div id="lang-status"></div>
+      </div>
+
+      <!-- Custom Instructions -->
+      <div class="card">
+        <div class="card-title">🛠️ Custom Instructions (Optional)</div>
+        <div class="hint" style="margin-bottom: 0.75rem">
+          Add any additional instructions for the translator. For example:
+          preserve specific terms, formatting rules, or domain-specific
+          conventions.
+        </div>
+        <div class="form-group" style="margin-bottom: 0.5rem">
+          <textarea
+            id="custom-instructions"
+            class="custom-instructions-input"
+            placeholder="e.g. Preserve all Jira ticket IDs like PROJ-123. Keep currency symbols as-is. Don't translate product names like 'WorkBench' or 'CloudSync'..."
+            maxlength="500"
+            rows="3"
+          ></textarea>
+        </div>
+        <div class="char-counter">
+          <span id="char-count">0</span> / 500 characters
+        </div>
+      </div>
+
+      <!-- File Upload -->
+      <div class="card">
+        <div class="card-title">3. Upload CSV</div>
+        <div class="hint" style="margin-bottom: 0.5rem">
+          Upload a CSV with <strong>3 columns</strong>. The first row is treated
+          as the header and is replaced with fixed names. Any extra columns
+          beyond the first three are ignored.
+        </div>
+        <div id="header-info" class="header-info-box">
+          <span class="info-icon">ℹ️</span>
+          <span
+            >Your CSV file must have exactly these column headers (in order):
+            <strong id="header-col-1">Original ID</strong>,
+            <strong id="header-col-2">Source Content</strong>,
+            <strong id="header-col-3">Target Content</strong>. Select both
+            source and target languages above to see the exact header names.
+          </span>
+        </div>
+        <div
+          id="drop-area"
+          class="file-drop-area disabled-drop"
+          style="margin-top: 1rem"
+        >
           <input type="file" id="file-input" accept=".csv" />
           <div style="margin-bottom: 1rem">
             <svg
@@ -575,6 +823,14 @@
           <p style="color: var(--text-muted); margin-bottom: 1.5rem">
             or click to browse from your computer
           </p>
+          <div
+            id="file-upload-warning"
+            class="lang-warning"
+            style="display: none; margin-bottom: 1rem"
+          >
+            ⚠️ Please select both source and target languages before uploading a
+            file.
+          </div>
           <div id="file-info" class="hidden">
             <strong id="file-name" style="color: var(--accent-1)"></strong>
             (<span id="file-rows"></span>)
@@ -584,7 +840,7 @@
 
       <div id="processing-section" class="hidden">
         <div class="card">
-          <div class="card-title">3. Processing Settings</div>
+          <div class="card-title">4. Processing Settings</div>
           <div class="row">
             <div class="col">
               <div class="form-group">
@@ -639,7 +895,7 @@
         </div>
 
         <div class="card">
-          <div class="card-title">4. Translation Progress</div>
+          <div class="card-title">5. Translation Progress</div>
 
           <div id="active-model-display" class="active-model-display hidden">
             <span class="label">🚀 Active Model:</span>
@@ -717,10 +973,39 @@
 
     <script>
       // ================================================================
-      //  CONSTANTS
+      //  CONSTANTS & LANGUAGE MAP
       // ================================================================
 
-      const FIXED_HEADERS = ["Original ID", "Source Content (AU)", "EN-US"];
+      const LANGUAGE_MAP = {
+        "en-AU": "English (Australia)",
+        "en-US": "English (United States)",
+        "en-GB": "English (United Kingdom)",
+        "en-IN": "English (India)",
+        "fr-FR": "French",
+        "de-DE": "German",
+      };
+
+      // Short codes for header labels
+      const LANGUAGE_SHORT = {
+        "en-AU": "EN-AU",
+        "en-US": "EN-US",
+        "en-GB": "EN-GB",
+        "en-IN": "EN-IN",
+        "fr-FR": "FR",
+        "de-DE": "DE",
+      };
+
+      function getFixedHeaders() {
+        const src = state.sourceLanguage;
+        const tgt = state.targetLanguage;
+        const srcLabel = src
+          ? `Source Content (${LANGUAGE_SHORT[src] || src})`
+          : "Source Content";
+        const tgtLabel = tgt ? LANGUAGE_SHORT[tgt] || tgt : "Target Content";
+        return ["Original ID", srcLabel, tgtLabel];
+      }
+
+      let FIXED_HEADERS = ["Original ID", "Source Content", "Target Content"];
 
       // Models ordered by priority: highest RPM & RPD first.
       const MODEL_CONFIGS = [
@@ -962,6 +1247,14 @@
       const UI = {
         apiKeyInput: document.getElementById("api-key"),
         saveKeyBtn: document.getElementById("save-key-btn"),
+        sourceLang: document.getElementById("source-lang"),
+        targetLang: document.getElementById("target-lang"),
+        langStatus: document.getElementById("lang-status"),
+        headerCol1: document.getElementById("header-col-1"),
+        headerCol2: document.getElementById("header-col-2"),
+        headerCol3: document.getElementById("header-col-3"),
+        headerInfo: document.getElementById("header-info"),
+        fileUploadWarning: document.getElementById("file-upload-warning"),
         dropArea: document.getElementById("drop-area"),
         fileInput: document.getElementById("file-input"),
         fileInfo: document.getElementById("file-info"),
@@ -989,6 +1282,8 @@
         activeModelName: document.getElementById("active-model-name"),
         rpdCounter: document.getElementById("rpd-counter"),
         rpdBar: document.getElementById("rpd-bar"),
+        customInstructions: document.getElementById("custom-instructions"),
+        charCount: document.getElementById("char-count"),
       };
 
       // ================================================================
@@ -1007,6 +1302,8 @@
         errorCount: 0,
         startTime: null,
         apiKey: localStorage.getItem("gemini_api_key") || "",
+        sourceLanguage: localStorage.getItem("translator_source_lang") || "",
+        targetLanguage: localStorage.getItem("translator_target_lang") || "",
         countdownInterval: null,
         activeModelId: null,
         modelPoolUpdateInterval: null,
@@ -1020,8 +1317,50 @@
         UI.apiKeyInput.value = state.apiKey;
       }
 
+      // Restore saved language selections
+      if (state.sourceLanguage) {
+        UI.sourceLang.value = state.sourceLanguage;
+      }
+      if (state.targetLanguage && state.sourceLanguage) {
+        UI.targetLang.disabled = false;
+        updateTargetOptions();
+        UI.targetLang.value = state.targetLanguage;
+      }
+      updateLanguageUI();
+
       renderModelPool();
       updateModelPoolUI();
+
+      // Restore saved custom instructions
+      const savedInstructions =
+        localStorage.getItem("translator_custom_instructions") || "";
+      if (savedInstructions) {
+        UI.customInstructions.value = savedInstructions;
+        UI.charCount.textContent = savedInstructions.length;
+        const counter = UI.charCount.parentElement;
+        counter.className = "char-counter";
+        if (savedInstructions.length >= 500) counter.classList.add("at-limit");
+        else if (savedInstructions.length >= 400)
+          counter.classList.add("near-limit");
+      }
+
+      // Character counter for custom instructions
+      UI.customInstructions.addEventListener("input", () => {
+        const len = UI.customInstructions.value.length;
+        UI.charCount.textContent = len;
+        const counter = UI.charCount.parentElement;
+        counter.className = "char-counter";
+        if (len >= 500) {
+          counter.classList.add("at-limit");
+        } else if (len >= 400) {
+          counter.classList.add("near-limit");
+        }
+        // Persist to localStorage
+        localStorage.setItem(
+          "translator_custom_instructions",
+          UI.customInstructions.value
+        );
+      });
 
       // Safety net for uncaught errors
       window.addEventListener("error", (e) => {
@@ -1151,6 +1490,183 @@
       }
 
       // ================================================================
+      //  LANGUAGE SELECTOR LOGIC
+      // ================================================================
+
+      function updateTargetOptions() {
+        const srcVal = UI.sourceLang.value;
+        const options = UI.targetLang.querySelectorAll("option");
+        options.forEach((opt) => {
+          if (opt.value === "") return; // placeholder
+          opt.disabled = opt.value === srcVal;
+          opt.style.display = opt.value === srcVal ? "none" : "";
+        });
+        // If current target matches source, reset it
+        if (UI.targetLang.value === srcVal) {
+          UI.targetLang.value = "";
+          state.targetLanguage = "";
+          localStorage.removeItem("translator_target_lang");
+        }
+      }
+
+      function updateLanguageUI() {
+        const src = state.sourceLanguage;
+        const tgt = state.targetLanguage;
+        const statusEl = UI.langStatus;
+
+        // Update header info
+        FIXED_HEADERS = getFixedHeaders();
+        UI.headerCol1.textContent = FIXED_HEADERS[0];
+        UI.headerCol2.textContent = FIXED_HEADERS[1];
+        UI.headerCol3.textContent = FIXED_HEADERS[2];
+
+        if (!src) {
+          statusEl.innerHTML = `<div class="lang-warning">⚠️ Please select a source language to continue.</div>`;
+          UI.dropArea.classList.add("disabled-drop");
+          UI.fileUploadWarning.style.display = "flex";
+          return;
+        }
+
+        if (!tgt) {
+          statusEl.innerHTML = `<div class="lang-warning">⚠️ Now select a target language to enable file upload.</div>`;
+          UI.dropArea.classList.add("disabled-drop");
+          UI.fileUploadWarning.style.display = "flex";
+          return;
+        }
+
+        // Both selected
+        const srcName = LANGUAGE_MAP[src] || src;
+        const tgtName = LANGUAGE_MAP[tgt] || tgt;
+        statusEl.innerHTML = `<div class="lang-success">✅ Translating from <strong>${srcName}</strong> → <strong>${tgtName}</strong></div>`;
+        UI.dropArea.classList.remove("disabled-drop");
+        UI.fileUploadWarning.style.display = "none";
+      }
+
+      // Reset everything to fresh state (as if page just opened)
+      function resetToScratch() {
+        // Stop any active processing
+        if (state.isProcessing) {
+          state.isPaused = true;
+          state.isProcessing = false;
+          state.activeModelId = null;
+          stopCountdown();
+          clearInterval(state.modelPoolUpdateInterval);
+        }
+
+        // Clear data state
+        state.csvData = [];
+        state.headers = getFixedHeaders();
+        state.currentIndex = 0;
+        state.processedCount = 0;
+        state.errorCount = 0;
+        state.startTime = null;
+
+        // Reset file input
+        UI.fileInput.value = "";
+        UI.fileInfo.classList.add("hidden");
+        UI.fileName.textContent = "";
+        UI.fileRows.textContent = "";
+
+        // Hide processing section
+        UI.processingSection.classList.add("hidden");
+
+        // Reset buttons
+        UI.startBtn.classList.remove("hidden");
+        UI.startBtn.disabled = false;
+        UI.startBtn.textContent = "Start Processing";
+        UI.pauseBtn.classList.add("hidden");
+        UI.activeModelDisplay.classList.add("hidden");
+
+        // Reset progress
+        UI.progressBar.style.width = "0%";
+        UI.statProcessed.textContent = "0";
+        UI.statRemaining.textContent = "0";
+        UI.statErrors.textContent = "0";
+        UI.statRate.textContent = "0/min";
+
+        // Clear log
+        UI.logConsole.innerHTML =
+          '<div class="log-entry log-info">System ready. Waiting for file and API key...</div>';
+
+        updateModelPoolUI();
+        log("🔄 Session reset. Please upload a new file.", "info");
+      }
+
+      function handleLanguageChangeWithConfirm(changeFn) {
+        // If a file is loaded or processing has started, warn the user
+        if (state.csvData.length > 0) {
+          const hasProgress = state.processedCount > 0;
+          let message =
+            "Changing the language will remove the currently loaded file and reset all progress.";
+          if (hasProgress) {
+            message = `You have ${state.processedCount} translated rows. Changing the language will discard ALL progress and remove the loaded file.`;
+          }
+          message += "\n\nAre you sure you want to proceed?";
+
+          if (!confirm(message)) {
+            return false; // User cancelled
+          }
+
+          // User confirmed — reset to scratch
+          resetToScratch();
+        }
+
+        changeFn();
+        return true;
+      }
+
+      UI.sourceLang.addEventListener("change", (e) => {
+        const newValue = e.target.value;
+        const oldValue = state.sourceLanguage;
+
+        const proceed = handleLanguageChangeWithConfirm(() => {
+          state.sourceLanguage = newValue;
+          localStorage.setItem("translator_source_lang", state.sourceLanguage);
+
+          // Enable target dropdown
+          UI.targetLang.disabled = false;
+
+          // Reset target if it matches source
+          updateTargetOptions();
+
+          // Reset target selection when source changes
+          state.targetLanguage = UI.targetLang.value || "";
+          localStorage.setItem("translator_target_lang", state.targetLanguage);
+
+          updateLanguageUI();
+          log(
+            `Source language set to: ${LANGUAGE_MAP[state.sourceLanguage]}`,
+            "info"
+          );
+        });
+
+        if (!proceed) {
+          // Revert the dropdown to old value
+          e.target.value = oldValue;
+        }
+      });
+
+      UI.targetLang.addEventListener("change", (e) => {
+        const newValue = e.target.value;
+        const oldValue = state.targetLanguage;
+
+        const proceed = handleLanguageChangeWithConfirm(() => {
+          state.targetLanguage = newValue;
+          localStorage.setItem("translator_target_lang", state.targetLanguage);
+          updateLanguageUI();
+          log(
+            `Target language set to: ${LANGUAGE_MAP[state.targetLanguage]}`,
+            "info"
+          );
+        });
+
+        if (!proceed) {
+          // Revert the dropdown to old value
+          e.target.value = oldValue;
+        }
+      });
+
+      // ================================================================
       //  EVENT HANDLERS
       // ================================================================
 
@@ -1164,9 +1680,16 @@
       });
 
       // File Upload Handlers
-      UI.dropArea.addEventListener("click", () => UI.fileInput.click());
+      UI.dropArea.addEventListener("click", () => {
+        if (!state.sourceLanguage || !state.targetLanguage) {
+          UI.fileUploadWarning.style.display = "flex";
+          return;
+        }
+        UI.fileInput.click();
+      });
       UI.dropArea.addEventListener("dragover", (e) => {
         e.preventDefault();
+        if (!state.sourceLanguage || !state.targetLanguage) return;
         UI.dropArea.classList.add("dragover");
       });
       UI.dropArea.addEventListener("dragleave", () => {
@@ -1175,6 +1698,10 @@
       UI.dropArea.addEventListener("drop", (e) => {
         e.preventDefault();
         UI.dropArea.classList.remove("dragover");
+        if (!state.sourceLanguage || !state.targetLanguage) {
+          UI.fileUploadWarning.style.display = "flex";
+          return;
+        }
         if (e.dataTransfer.files.length) {
           handleFile(e.dataTransfer.files[0]);
         }
@@ -1201,7 +1728,52 @@
               return;
             }
 
+            FIXED_HEADERS = getFixedHeaders();
             state.headers = FIXED_HEADERS.slice();
+
+            // ---- Validate CSV headers ----
+            const fileHeaders = data[0].map((h) => (h || "").toString().trim());
+            const expectedHeaders = FIXED_HEADERS;
+            const headerMismatches = [];
+
+            for (let i = 0; i < expectedHeaders.length; i++) {
+              const expected = expectedHeaders[i];
+              const actual = fileHeaders[i] || "(missing)";
+              if (actual.toLowerCase() !== expected.toLowerCase()) {
+                headerMismatches.push(
+                  `  Column ${
+                    i + 1
+                  }: Expected "${expected}" but found "${actual}"`
+                );
+              }
+            }
+
+            if (headerMismatches.length > 0) {
+              const warningMsg =
+                "⚠️ CSV Header Mismatch Detected!\n\n" +
+                "Your file headers do not match the expected format:\n" +
+                headerMismatches.join("\n") +
+                "\n\nExpected headers (in order):\n" +
+                `  1. ${expectedHeaders[0]}\n` +
+                `  2. ${expectedHeaders[1]}\n` +
+                `  3. ${expectedHeaders[2]}\n\n` +
+                "Do you want to continue anyway? The headers will be replaced automatically.";
+
+              if (!confirm(warningMsg)) {
+                log(
+                  "File rejected: CSV headers do not match expected format.",
+                  "warning"
+                );
+                UI.fileInput.value = "";
+                return;
+              }
+              log(
+                `⚠️ Header mismatch detected but user chose to continue. Mismatches: ${headerMismatches.length}`,
+                "warning"
+              );
+            } else {
+              log("✅ CSV headers validated successfully.", "success");
+            }
 
             const rawRows = data.slice(1);
 
@@ -1251,14 +1823,17 @@
         entry.className = `log-entry log-${type}`;
 
         if (original) {
+          const srcLabel = LANGUAGE_SHORT[state.sourceLanguage] || "SRC";
+          const tgtLabel = LANGUAGE_SHORT[state.targetLanguage] || "TGT";
+
           const origDiv = document.createElement("div");
           origDiv.className = "original-text";
-          origDiv.textContent = `AU: ${original}`;
+          origDiv.textContent = `${srcLabel}: ${original}`;
           entry.appendChild(origDiv);
 
           const transDiv = document.createElement("div");
           transDiv.className = "translated-text";
-          transDiv.textContent = `US: ${msg}`;
+          transDiv.textContent = `${tgtLabel}: ${msg}`;
           entry.appendChild(transDiv);
         } else {
           entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
@@ -1600,15 +2175,28 @@
           model
         )}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-        const prompt = `You are an expert editor translating Australian English to American English.
-Translate the following texts from AU English to US English.
+        const srcLangName =
+          LANGUAGE_MAP[state.sourceLanguage] || state.sourceLanguage;
+        const tgtLangName =
+          LANGUAGE_MAP[state.targetLanguage] || state.targetLanguage;
+
+        const customInstructions = (UI.customInstructions.value || "").trim();
+
+        let prompt = `You are an expert editor and translator.
+Translate the following texts from ${srcLangName} to ${tgtLangName}.
 CRITICAL RULES:
 1. Preserve ALL HTML tags exactly as they are.
 2. Preserve all placeholders like "....", "........", numbers, and special characters.
 3. Preserve the exact casing and punctuation.
-4. ONLY change AU spelling/terms to US spelling (e.g., analyse -> analyze, colour -> color).
-5. Do not translate terms like "superannuation" or "BAS", leave them.
+4. ONLY change the language/spelling/terms from ${srcLangName} to ${tgtLangName}.
+5. Do not translate domain-specific terms, acronyms, or proper nouns — leave them unchanged.
+`;
 
+        if (customInstructions) {
+          prompt += `\nADDITIONAL INSTRUCTIONS FROM THE USER (follow these strictly):\n${customInstructions}\n`;
+        }
+
+        prompt += `
 Respond ONLY with a valid JSON array of strings, where each string is the translated text in the exact same order as the input. Do not include markdown blocks like \`\`\`json. Just the raw JSON array.
 
 Inputs:
@@ -1760,6 +2348,11 @@ ${texts.map((t, i) => `${i + 1}. ${JSON.stringify(t)}`).join("\n")}`;
             alert("Please enter your Gemini API key first.");
             UI.apiKeyInput.focus();
             log("Blocked: no API key entered.", "error");
+            return;
+          }
+          if (!state.sourceLanguage || !state.targetLanguage) {
+            alert("Please select both source and target languages first.");
+            log("Blocked: languages not selected.", "error");
             return;
           }
           if (state.csvData.length === 0) {
