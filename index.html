@@ -489,6 +489,7 @@
         100% {
           box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
         }
+
         50% {
           box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
         }
@@ -856,7 +857,8 @@
         recordRequest(model) {
           model.requestTimestamps.push(Date.now());
           model.dailyCount++;
-          model.consecutiveErrors = 0;
+          // Note: consecutiveErrors is reset in processBatchInner on success,
+          // NOT here, because the request hasn't completed yet.
           this._saveDailyCounts();
         }
 
@@ -1365,7 +1367,26 @@
 
         if (batch.length === 0) {
           if (state.currentIndex >= state.csvData.length) {
-            finishProcessing();
+            // Reached end of data — but double-check for untranslated rows
+            // that may have been left behind due to errors/retries
+            const actualRemaining = state.csvData.filter(
+              (r) => r[1] && r[1].trim() !== "" && (!r[2] || r[2].trim() === "")
+            );
+            if (actualRemaining.length > 0) {
+              log(
+                `🔄 Found ${actualRemaining.length} untranslated rows still remaining. Re-scanning...`,
+                "info"
+              );
+              state.currentIndex = 0; // Rescan from beginning
+              setTimeout(processBatch, 200);
+            } else {
+              // Recalculate processedCount to match reality
+              state.processedCount = state.csvData.filter(
+                (r) => r[2] && r[2].trim() !== ""
+              ).length;
+              updateStats();
+              finishProcessing();
+            }
           } else {
             setTimeout(processBatch, 50);
           }
@@ -1530,7 +1551,10 @@
               );
             } else {
               log(
-                `⚠️ ${model.name} error: ${err.message.slice(0, 150)}. Switching to next model...`,
+                `⚠️ ${model.name} error: ${err.message.slice(
+                  0,
+                  150
+                )}. Switching to next model...`,
                 "warning"
               );
             }
