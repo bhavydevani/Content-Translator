@@ -153,6 +153,7 @@
         background: rgba(255, 255, 255, 0.1);
         color: var(--text-main);
       }
+
       .btn-secondary:hover {
         background: rgba(255, 255, 255, 0.15);
       }
@@ -161,6 +162,7 @@
         background: var(--success);
         color: white;
       }
+
       .btn-success:hover {
         opacity: 0.9;
       }
@@ -171,6 +173,7 @@
         align-items: flex-end;
         flex-wrap: wrap;
       }
+
       .col {
         flex: 1;
         min-width: 140px;
@@ -287,6 +290,7 @@
         padding-bottom: 0.5rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       }
+
       .log-entry:last-child {
         border-bottom: none;
       }
@@ -294,12 +298,15 @@
       .log-success {
         color: var(--success);
       }
+
       .log-error {
         color: var(--error);
       }
+
       .log-info {
         color: var(--accent-1);
       }
+
       .log-warning {
         color: var(--warning);
       }
@@ -308,6 +315,7 @@
         color: var(--text-muted);
         margin-bottom: 0.25rem;
       }
+
       .translated-text {
         color: #e2e8f0;
       }
@@ -327,13 +335,179 @@
       .hidden {
         display: none !important;
       }
+
+      /* ===== Model Pool Styles ===== */
+
+      .model-pool-summary {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+        padding: 0.75rem 1rem;
+        background: rgba(59, 130, 246, 0.08);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 0.75rem;
+        font-size: 0.9rem;
+        color: var(--accent-1);
+        font-weight: 500;
+        flex-wrap: wrap;
+      }
+
+      .model-pool-summary span {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .model-pool-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 0.75rem;
+      }
+
+      .model-card {
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid var(--card-border);
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .model-card.active-model {
+        border-color: var(--accent-1);
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
+        background: rgba(59, 130, 246, 0.06);
+      }
+
+      .model-card.cooldown {
+        border-color: var(--warning);
+      }
+
+      .model-card.exhausted {
+        border-color: var(--error);
+        opacity: 0.5;
+      }
+
+      .model-card.model-disabled {
+        opacity: 0.35;
+      }
+
+      .model-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .model-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-main);
+      }
+
+      .model-toggle input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: var(--accent-1);
+      }
+
+      .model-status-dot {
+        font-size: 0.9rem;
+      }
+
+      .model-limits {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .model-limits span {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+      }
+
+      .active-model-display {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .active-model-display .label {
+        color: var(--success);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .active-model-display .value {
+        color: var(--text-main);
+        font-weight: 500;
+      }
+
+      .rpd-progress {
+        margin-top: 0.5rem;
+      }
+
+      .rpd-progress-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 0.35rem;
+      }
+
+      .rpd-bar-container {
+        height: 6px;
+        background: rgba(15, 23, 42, 0.8);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .rpd-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(to right, var(--success), var(--accent-1));
+        transition: width 0.5s ease;
+        border-radius: 3px;
+      }
+
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
+        }
+      }
+
+      .model-card.active-model {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
     </style>
   </head>
+
   <body>
     <div class="container">
       <div class="header">
         <h1>AU to US English Translator</h1>
-        <p>100% Free • Preserves HTML & Structure • Powered by Gemini</p>
+        <p>
+          100% Free • Preserves HTML & Structure • Multi-Model Powered by Gemini
+          Flash
+        </p>
       </div>
 
       <div class="card">
@@ -417,9 +591,9 @@
                 <input
                   type="number"
                   id="batch-size"
-                  value="5"
+                  value="50"
                   min="1"
-                  max="20"
+                  max="100"
                 />
               </div>
             </div>
@@ -429,42 +603,47 @@
                 <input
                   type="number"
                   id="delay-ms"
-                  value="1500"
+                  value="1000"
                   min="0"
                   step="500"
                 />
               </div>
             </div>
-            <div class="col">
-              <div class="form-group">
-                <label>Requests per Minute Limit</label>
-                <input
-                  type="number"
-                  id="rpm-limit"
-                  value="15"
-                  min="1"
-                  max="1000"
-                />
-              </div>
-            </div>
-            <div class="col">
-              <div class="form-group">
-                <label>Gemini Model</label>
-                <input type="text" id="model-name" value="gemini-2.5-flash" />
-              </div>
-            </div>
           </div>
           <div class="hint">
-            The app tracks real API calls in a rolling 60-second window. It
-            keeps processing as fast as your RPM limit allows, and only pauses
-            (with a countdown) once that budget is actually used up — it will
-            also auto-detect a live 429 rate-limit response from Gemini and wait
-            it out automatically.
+            Batch size of 50 translates 50 rows per API call. With 5 models
+            rotating, the system achieves up to ~40 requests/minute combined,
+            translating ~2,000 rows/minute.
+          </div>
+        </div>
+
+        <!-- Model Pool -->
+        <div class="card">
+          <div class="card-title">🤖 Model Pool (5 Models)</div>
+          <div id="model-pool-summary" class="model-pool-summary">
+            <!-- Populated by JS -->
+          </div>
+          <div id="model-pool-grid" class="model-pool-grid">
+            <!-- Populated by JS -->
+          </div>
+          <div class="rpd-progress" style="margin-top: 1rem">
+            <div class="rpd-progress-header">
+              <span>Daily Requests Used (RPD)</span>
+              <span id="rpd-counter">0 / 3,580</span>
+            </div>
+            <div class="rpd-bar-container">
+              <div id="rpd-bar" class="rpd-bar"></div>
+            </div>
           </div>
         </div>
 
         <div class="card">
           <div class="card-title">4. Translation Progress</div>
+
+          <div id="active-model-display" class="active-model-display hidden">
+            <span class="label">🚀 Active Model:</span>
+            <span class="value" id="active-model-name">—</span>
+          </div>
 
           <div class="stats-grid">
             <div class="stat-card">
@@ -497,7 +676,9 @@
 
           <div id="rate-limit-timer" class="rate-limit-panel hidden">
             <div class="rl-text">
-              <span>⏳ Rate limit reached — resuming automatically</span>
+              <span id="rl-message"
+                >⏳ All models cooling down — resuming automatically</span
+              >
               <span><span id="timer-seconds">60</span>s</span>
             </div>
             <div class="rl-timer-bar-container">
@@ -534,7 +715,247 @@
     </div>
 
     <script>
+      // ================================================================
+      //  CONSTANTS
+      // ================================================================
+
       const FIXED_HEADERS = ["Original ID", "Source Content (AU)", "EN-US"];
+
+      // Models ordered by priority: highest RPM & RPD first.
+      const MODEL_CONFIGS = [
+        {
+          id: "gemini-3.1-flash-lite",
+          name: "Gemini 3.1 Flash Lite",
+          rpm: 15,
+          rpd: 500,
+        },
+        {
+          id: "gemini-2.5-flash-lite",
+          name: "Gemini 2.5 Flash Lite",
+          rpm: 10,
+          rpd: 20,
+        },
+        {
+          id: "gemini-2.5-flash",
+          name: "Gemini 2.5 Flash",
+          rpm: 5,
+          rpd: 20,
+        },
+        {
+          id: "gemini-3.5-flash",
+          name: "Gemini 3.5 Flash",
+          rpm: 5,
+          rpd: 20,
+        },
+        {
+          id: "gemini-3-flash-preview",
+          name: "Gemini 3 Flash",
+          rpm: 5,
+          rpd: 20,
+        },
+      ];
+
+      // ================================================================
+      //  MODEL POOL MANAGER
+      // ================================================================
+
+      class ModelPoolManager {
+        constructor(configs) {
+          this.models = configs.map((c) => ({
+            ...c,
+            enabled: true,
+            disabled: false, // auto-disabled on persistent non-429 errors
+            disableReason: "",
+            requestTimestamps: [], // rolling 60s window
+            dailyCount: 0,
+            consecutiveErrors: 0,
+          }));
+          this.currentIndex = 0;
+          this.dailyResetTime = this._getNextMidnight();
+          this._loadDailyCounts();
+        }
+
+        _getNextMidnight() {
+          const d = new Date();
+          d.setHours(24, 0, 0, 0);
+          return d.getTime();
+        }
+
+        _pruneTimestamps(model) {
+          const cutoff = Date.now() - 60000;
+          model.requestTimestamps = model.requestTimestamps.filter(
+            (t) => t > cutoff
+          );
+        }
+
+        _checkDailyReset() {
+          if (Date.now() >= this.dailyResetTime) {
+            for (const m of this.models) {
+              m.dailyCount = 0;
+            }
+            this.dailyResetTime = this._getNextMidnight();
+            this._saveDailyCounts();
+          }
+        }
+
+        isModelAvailable(model) {
+          if (!model.enabled || model.disabled) return false;
+          this._checkDailyReset();
+          this._pruneTimestamps(model);
+          return (
+            model.requestTimestamps.length < model.rpm &&
+            model.dailyCount < model.rpd
+          );
+        }
+
+        isModelRpdExhausted(model) {
+          this._checkDailyReset();
+          return model.dailyCount >= model.rpd;
+        }
+
+        getNextAvailableModel() {
+          this._checkDailyReset();
+
+          // Try all models starting from currentIndex
+          for (let i = 0; i < this.models.length; i++) {
+            const idx = (this.currentIndex + i) % this.models.length;
+            const model = this.models[idx];
+            if (this.isModelAvailable(model)) {
+              this.currentIndex = (idx + 1) % this.models.length;
+              return { model, waitMs: 0 };
+            }
+          }
+
+          // No model available right now — find the shortest RPM cooldown
+          let minWait = Infinity;
+          let bestModel = null;
+
+          for (const model of this.models) {
+            if (!model.enabled || model.disabled) continue;
+            if (this.isModelRpdExhausted(model)) continue; // RPD gone, skip
+
+            this._pruneTimestamps(model);
+            if (model.requestTimestamps.length >= model.rpm) {
+              const oldest = Math.min(...model.requestTimestamps);
+              const wait = 60000 - (Date.now() - oldest) + 500;
+              if (wait < minWait) {
+                minWait = wait;
+                bestModel = model;
+              }
+            }
+          }
+
+          if (bestModel) {
+            return { model: bestModel, waitMs: Math.max(minWait, 1000) };
+          }
+
+          // All models exhausted for the day
+          return { model: null, waitMs: 0 };
+        }
+
+        recordRequest(model) {
+          model.requestTimestamps.push(Date.now());
+          model.dailyCount++;
+          model.consecutiveErrors = 0;
+          this._saveDailyCounts();
+        }
+
+        markRateLimited(model) {
+          // Fill RPM timestamps so the model is skipped until they expire
+          const now = Date.now();
+          while (
+            model.requestTimestamps.filter((t) => t > now - 60000).length <
+            model.rpm
+          ) {
+            model.requestTimestamps.push(now);
+          }
+        }
+
+        disableModel(model, reason) {
+          model.disabled = true;
+          model.disableReason = reason;
+        }
+
+        toggleModel(modelId, enabled) {
+          const m = this.models.find((m) => m.id === modelId);
+          if (m) {
+            m.enabled = enabled;
+            if (enabled) {
+              m.disabled = false;
+              m.disableReason = "";
+              m.consecutiveErrors = 0;
+            }
+          }
+        }
+
+        getEnabledModels() {
+          return this.models.filter((m) => m.enabled && !m.disabled);
+        }
+
+        getStats() {
+          this._checkDailyReset();
+          let totalRpmUsed = 0,
+            totalRpmMax = 0;
+          let totalRpdUsed = 0,
+            totalRpdMax = 0;
+          let availableCount = 0;
+
+          for (const m of this.models) {
+            if (!m.enabled || m.disabled) continue;
+            this._pruneTimestamps(m);
+            totalRpmUsed += m.requestTimestamps.length;
+            totalRpmMax += m.rpm;
+            totalRpdUsed += m.dailyCount;
+            totalRpdMax += m.rpd;
+            if (this.isModelAvailable(m)) availableCount++;
+          }
+
+          return {
+            totalRpmUsed,
+            totalRpmMax,
+            totalRpdUsed,
+            totalRpdMax,
+            availableCount,
+            enabledCount: this.getEnabledModels().length,
+          };
+        }
+
+        _saveDailyCounts() {
+          const data = { resetTime: this.dailyResetTime, models: {} };
+          for (const m of this.models) {
+            data.models[m.id] = m.dailyCount;
+          }
+          try {
+            localStorage.setItem("model_pool_daily", JSON.stringify(data));
+          } catch (e) {
+            // Ignore storage errors
+          }
+        }
+
+        _loadDailyCounts() {
+          try {
+            const raw = localStorage.getItem("model_pool_daily");
+            if (!raw) return;
+            const data = JSON.parse(raw);
+
+            if (data.resetTime && Date.now() < data.resetTime) {
+              this.dailyResetTime = data.resetTime;
+              for (const m of this.models) {
+                if (data.models && data.models[m.id] !== undefined) {
+                  m.dailyCount = data.models[m.id];
+                }
+              }
+            }
+            // If past reset time, counts stay at 0 (default)
+          } catch (e) {
+            // Ignore parse errors
+          }
+        }
+      }
+
+      // ================================================================
+      //  UI REFERENCES
+      // ================================================================
 
       const UI = {
         apiKeyInput: document.getElementById("api-key"),
@@ -556,15 +977,26 @@
         logConsole: document.getElementById("log-console"),
         batchSizeInput: document.getElementById("batch-size"),
         delayInput: document.getElementById("delay-ms"),
-        rpmInput: document.getElementById("rpm-limit"),
-        modelInput: document.getElementById("model-name"),
         rlTimerPanel: document.getElementById("rate-limit-timer"),
         rlTimerSeconds: document.getElementById("timer-seconds"),
         rlTimerBar: document.getElementById("timer-bar"),
+        rlMessage: document.getElementById("rl-message"),
+        modelPoolGrid: document.getElementById("model-pool-grid"),
+        modelPoolSummary: document.getElementById("model-pool-summary"),
+        activeModelDisplay: document.getElementById("active-model-display"),
+        activeModelName: document.getElementById("active-model-name"),
+        rpdCounter: document.getElementById("rpd-counter"),
+        rpdBar: document.getElementById("rpd-bar"),
       };
 
+      // ================================================================
+      //  STATE
+      // ================================================================
+
+      const modelPool = new ModelPoolManager(MODEL_CONFIGS);
+
       let state = {
-        csvData: [], // each row: [id, auText, usText]
+        csvData: [],
         headers: FIXED_HEADERS.slice(),
         isProcessing: false,
         isPaused: false,
@@ -573,19 +1005,23 @@
         errorCount: 0,
         startTime: null,
         apiKey: localStorage.getItem("gemini_api_key") || "",
-        requestTimestamps: [], // ms timestamps of API calls in the last 60s
         countdownInterval: null,
-        consecutiveRateLimitHits: 0,
+        activeModelId: null,
+        modelPoolUpdateInterval: null,
       };
 
-      // Initialize
+      // ================================================================
+      //  INITIALIZATION
+      // ================================================================
+
       if (state.apiKey) {
         UI.apiKeyInput.value = state.apiKey;
       }
 
-      // Safety net: nothing should ever fail silently. Any uncaught error
-      // or rejected promise anywhere in the app gets written to the Live
-      // Log so the UI never just "sits there" with no explanation.
+      renderModelPool();
+      updateModelPoolUI();
+
+      // Safety net for uncaught errors
       window.addEventListener("error", (e) => {
         log(`Unexpected error: ${e.message}`, "error");
         if (state.isProcessing) pauseProcessing(true);
@@ -596,6 +1032,125 @@
         log(`Unexpected error: ${msg}`, "error");
         if (state.isProcessing) pauseProcessing(true);
       });
+
+      // ================================================================
+      //  MODEL POOL UI
+      // ================================================================
+
+      function renderModelPool() {
+        // Summary bar
+        const stats = modelPool.getStats();
+        UI.modelPoolSummary.innerHTML = `
+          <span>⚡ Combined RPM: <strong>${stats.totalRpmMax}</strong></span>
+          <span>📊 Combined RPD: <strong>${stats.totalRpdMax.toLocaleString()}</strong></span>
+          <span>✅ Models Active: <strong>${stats.enabledCount}</strong> / ${
+          modelPool.models.length
+        }</span>
+        `;
+
+        // Model grid
+        UI.modelPoolGrid.innerHTML = "";
+        for (const model of modelPool.models) {
+          const card = document.createElement("div");
+          card.className = "model-card";
+          card.dataset.modelId = model.id;
+          card.innerHTML = `
+            <div class="model-card-header">
+              <label class="model-toggle">
+                <input type="checkbox" ${model.enabled ? "checked" : ""}
+                  data-model-id="${model.id}">
+                <span>${model.name}</span>
+              </label>
+              <span class="model-status-dot" id="status-dot-${
+                model.id
+              }">🟢</span>
+            </div>
+            <div class="model-limits">
+              <span>RPM: <strong id="rpm-used-${model.id}">0</strong>/${
+            model.rpm
+          }</span>
+              <span>RPD: <strong id="rpd-used-${model.id}">${
+            model.dailyCount
+          }</strong>/${model.rpd.toLocaleString()}</span>
+            </div>
+          `;
+          UI.modelPoolGrid.appendChild(card);
+
+          // Toggle handler
+          const checkbox = card.querySelector('input[type="checkbox"]');
+          checkbox.addEventListener("change", (e) => {
+            modelPool.toggleModel(model.id, e.target.checked);
+            updateModelPoolUI();
+            renderModelPoolSummary();
+          });
+        }
+      }
+
+      function renderModelPoolSummary() {
+        const stats = modelPool.getStats();
+        UI.modelPoolSummary.innerHTML = `
+          <span>⚡ Combined RPM: <strong>${stats.totalRpmMax}</strong></span>
+          <span>📊 Combined RPD: <strong>${stats.totalRpdMax.toLocaleString()}</strong></span>
+          <span>✅ Models Active: <strong>${stats.enabledCount}</strong> / ${
+          modelPool.models.length
+        }</span>
+        `;
+      }
+
+      function updateModelPoolUI() {
+        const stats = modelPool.getStats();
+
+        for (const model of modelPool.models) {
+          const card = document.querySelector(`[data-model-id="${model.id}"]`);
+          if (!card) continue;
+
+          modelPool._pruneTimestamps(model);
+          modelPool._checkDailyReset();
+
+          const rpmUsed = model.requestTimestamps.length;
+          const rpdUsed = model.dailyCount;
+
+          const rpmEl = document.getElementById(`rpm-used-${model.id}`);
+          const rpdEl = document.getElementById(`rpd-used-${model.id}`);
+          const dotEl = document.getElementById(`status-dot-${model.id}`);
+
+          if (rpmEl) rpmEl.textContent = rpmUsed;
+          if (rpdEl) rpdEl.textContent = rpdUsed;
+
+          // Reset classes
+          card.className = "model-card";
+
+          if (!model.enabled || model.disabled) {
+            if (dotEl) dotEl.textContent = "⚫";
+            card.classList.add("model-disabled");
+          } else if (rpdUsed >= model.rpd) {
+            if (dotEl) dotEl.textContent = "🔴";
+            card.classList.add("exhausted");
+          } else if (rpmUsed >= model.rpm) {
+            if (dotEl) dotEl.textContent = "🟡";
+            card.classList.add("cooldown");
+          } else {
+            if (dotEl) dotEl.textContent = "🟢";
+          }
+
+          // Mark actively-in-use model
+          if (state.activeModelId === model.id && state.isProcessing) {
+            card.classList.add("active-model");
+          }
+        }
+
+        // Update RPD progress bar
+        UI.rpdCounter.textContent = `${stats.totalRpdUsed.toLocaleString()} / ${stats.totalRpdMax.toLocaleString()}`;
+        const rpdPct =
+          stats.totalRpdMax > 0
+            ? (stats.totalRpdUsed / stats.totalRpdMax) * 100
+            : 0;
+        UI.rpdBar.style.width = `${Math.min(rpdPct, 100)}%`;
+      }
+
+      // ================================================================
+      //  EVENT HANDLERS
+      // ================================================================
 
       UI.saveKeyBtn.addEventListener("click", () => {
         const key = UI.apiKeyInput.value.trim();
@@ -644,14 +1199,10 @@
               return;
             }
 
-            // Row 0 is always treated as the header row and replaced
-            // with the fixed schema: Original ID | Source Content (AU) | EN-US
             state.headers = FIXED_HEADERS.slice();
 
             const rawRows = data.slice(1);
 
-            // Force every row to exactly 3 columns. Any columns beyond
-            // index 2 are dropped; missing columns are padded with "".
             state.csvData = rawRows
               .filter((row) => row.length > 0 && row.join("").trim() !== "")
               .map((row) => [
@@ -670,14 +1221,11 @@
             UI.fileInfo.classList.remove("hidden");
             UI.processingSection.classList.remove("hidden");
 
-            // Column 2 (index 2) is EN-US — count already-translated rows
             state.processedCount = state.csvData.filter(
               (row) => row[2] && row[2].trim() !== ""
             ).length;
             state.currentIndex = 0;
             state.errorCount = 0;
-            state.requestTimestamps = [];
-            state.consecutiveRateLimitHits = 0;
             state.startTime = null;
 
             UI.startBtn.disabled = false;
@@ -691,6 +1239,10 @@
           },
         });
       }
+
+      // ================================================================
+      //  UTILITIES
+      // ================================================================
 
       function log(msg, type = "info", original = null) {
         const entry = document.createElement("div");
@@ -726,7 +1278,7 @@
         UI.progressBar.style.width = `${progress}%`;
 
         if (state.startTime && state.processedCount > 0) {
-          const elapsed = (Date.now() - state.startTime) / 1000 / 60; // minutes
+          const elapsed = (Date.now() - state.startTime) / 1000 / 60;
           if (elapsed > 0) {
             const rate = Math.round(state.processedCount / elapsed);
             UI.statRate.textContent = `${rate}/min`;
@@ -734,31 +1286,11 @@
         }
       }
 
-      // ---------- Rate limiter (rolling 60s window) ----------
+      // ================================================================
+      //  COUNTDOWN TIMER UI
+      // ================================================================
 
-      function pruneTimestamps() {
-        const cutoff = Date.now() - 60000;
-        state.requestTimestamps = state.requestTimestamps.filter(
-          (t) => t > cutoff
-        );
-      }
-
-      // Returns 0 if a request can be made right now, otherwise ms to wait.
-      function getWaitTimeMs(rpmLimit) {
-        pruneTimestamps();
-        if (state.requestTimestamps.length < rpmLimit) return 0;
-        const oldest = Math.min(...state.requestTimestamps);
-        const wait = 60000 - (Date.now() - oldest) + 250; // small buffer
-        return Math.max(wait, 0);
-      }
-
-      function recordRequest() {
-        state.requestTimestamps.push(Date.now());
-      }
-
-      // ---------- Countdown timer UI ----------
-
-      function startCountdown(ms, onComplete) {
+      function startCountdown(ms, message, onComplete) {
         clearInterval(state.countdownInterval);
         const totalSec = Math.max(1, Math.ceil(ms / 1000));
         let remaining = totalSec;
@@ -766,12 +1298,16 @@
         UI.rlTimerPanel.classList.remove("hidden");
         UI.rlTimerSeconds.textContent = remaining;
         UI.rlTimerBar.style.width = "100%";
+        if (message) UI.rlMessage.textContent = message;
 
         state.countdownInterval = setInterval(() => {
           remaining -= 1;
           const clamped = Math.max(remaining, 0);
           UI.rlTimerSeconds.textContent = clamped;
           UI.rlTimerBar.style.width = `${(clamped / totalSec) * 100}%`;
+
+          // Update model pool status while waiting
+          updateModelPoolUI();
 
           if (remaining <= 0) {
             clearInterval(state.countdownInterval);
@@ -788,7 +1324,9 @@
         UI.rlTimerPanel.classList.add("hidden");
       }
 
-      // ---------- Processing loop ----------
+      // ================================================================
+      //  PROCESSING LOOP
+      // ================================================================
 
       async function processBatch() {
         try {
@@ -802,12 +1340,10 @@
       async function processBatchInner() {
         if (!state.isProcessing || state.isPaused) return;
 
-        const batchSize = parseInt(UI.batchSizeInput.value) || 5;
+        const batchSize = parseInt(UI.batchSizeInput.value) || 50;
         const delayMs = Math.max(parseInt(UI.delayInput.value) || 0, 0);
-        const rpmLimit = Math.max(parseInt(UI.rpmInput.value) || 15, 1);
-        const model = (UI.modelInput.value || "gemini-2.5-flash").trim();
 
-        // Find next unset rows
+        // ---- Collect next batch of untranslated rows ----
         let batch = [];
         let batchIndices = [];
 
@@ -836,25 +1372,51 @@
           return;
         }
 
-        // Check the rolling rate-limit budget BEFORE calling the API.
-        const waitMs = getWaitTimeMs(rpmLimit);
-        if (waitMs > 0) {
-          // Put these rows back so they're retried after the wait.
+        // ---- Get next available model from the pool ----
+        const result = modelPool.getNextAvailableModel();
+
+        if (!result.model && result.waitMs === 0) {
+          // All models exhausted for the day
           state.currentIndex = Math.min(...batchIndices);
           log(
-            `Rate limit budget used (${rpmLimit}/min). Waiting ${Math.ceil(
-              waitMs / 1000
-            )}s before continuing...`,
-            "warning"
+            "🛑 All models have exhausted their daily request quota (RPD). Processing cannot continue until quotas reset at midnight.",
+            "error"
           );
-          startCountdown(waitMs, () => {
-            if (state.isProcessing && !state.isPaused) processBatch();
-          });
+          pauseProcessing(true);
           return;
         }
 
-        log(`Processing batch of ${batch.length} rows...`, "info");
-        recordRequest();
+        if (result.waitMs > 0) {
+          // No model available right now, but one will free up
+          state.currentIndex = Math.min(...batchIndices);
+          const waitModel = result.model;
+          log(
+            `⏳ All models at RPM limit. Waiting ${Math.ceil(
+              result.waitMs / 1000
+            )}s for ${waitModel.name} to cool down...`,
+            "warning"
+          );
+          startCountdown(
+            result.waitMs,
+            `⏳ All models cooling down — next up: ${waitModel.name}`,
+            () => {
+              if (state.isProcessing && !state.isPaused) processBatch();
+            }
+          );
+          return;
+        }
+
+        // ---- We have an available model ----
+        const model = result.model;
+        state.activeModelId = model.id;
+
+        UI.activeModelDisplay.classList.remove("hidden");
+        UI.activeModelName.textContent = `${model.name} (${model.id})`;
+
+        log(`📤 Batch of ${batch.length} rows → ${model.name}`, "info");
+
+        modelPool.recordRequest(model);
+        updateModelPoolUI();
 
         try {
           const translations = await callGemini(batch, state.apiKey, model);
@@ -864,7 +1426,7 @@
             translations.length !== batch.length
           ) {
             throw new Error(
-              `API returned invalid format. Expected array of length ${
+              `API returned invalid format. Expected array of ${
                 batch.length
               }, got ${
                 Array.isArray(translations)
@@ -882,46 +1444,81 @@
           }
 
           if (!state.startTime) state.startTime = Date.now();
-          state.consecutiveRateLimitHits = 0;
+          model.consecutiveErrors = 0;
           updateStats();
+          updateModelPoolUI();
 
           if (state.currentIndex < state.csvData.length) {
             setTimeout(processBatch, delayMs);
           } else {
-            finishProcessing();
+            // Check if there are still untranslated rows we might have skipped
+            const remaining = state.csvData.filter(
+              (r) => r[1] && r[1].trim() !== "" && (!r[2] || r[2].trim() === "")
+            );
+            if (remaining.length > 0) {
+              state.currentIndex = 0; // Rescan from beginning
+              setTimeout(processBatch, delayMs);
+            } else {
+              finishProcessing();
+            }
           }
         } catch (err) {
           console.error(err);
 
           if (err.isRateLimit) {
-            state.consecutiveRateLimitHits =
-              (state.consecutiveRateLimitHits || 0) + 1;
+            // ---- 429: Mark model & immediately try next ----
+            modelPool.markRateLimited(model);
             state.currentIndex = Math.min(...batchIndices);
 
-            if (state.consecutiveRateLimitHits >= 3) {
-              // The same 429 keeps happening even after waiting — this is
-              // almost never a transient per-minute limit at that point.
-              // Common causes: the model name is invalid/deprecated, or
-              // the daily quota (RPD) is exhausted (which won't clear by
-              // waiting a minute). Stop looping and surface the real error.
+            log(
+              `⚠️ ${model.name} hit 429 rate limit. Switching to next model...`,
+              "warning"
+            );
+            updateModelPoolUI();
+
+            // Immediately try the next model (no wait)
+            setTimeout(processBatch, 100);
+          } else if (err.isModelError) {
+            // ---- Model-specific error (wrong name, unsupported, etc.) ----
+            model.consecutiveErrors = (model.consecutiveErrors || 0) + 1;
+
+            if (model.consecutiveErrors >= 2) {
+              modelPool.disableModel(model, err.message.slice(0, 200));
               log(
-                `Still getting 429 after ${state.consecutiveRateLimitHits} attempts in a row. This usually means the model name is wrong/deprecated, or your daily quota is used up (waiting won't fix that). Last error: ${err.message}`,
+                `❌ ${
+                  model.name
+                } auto-disabled after repeated errors: ${err.message.slice(
+                  0,
+                  150
+                )}`,
+                "error"
+              );
+            } else {
+              log(
+                `⚠️ ${model.name} error: ${err.message.slice(
+                  0,
+                  150
+                )}. Trying next model...`,
+                "warning"
+              );
+            }
+
+            state.currentIndex = Math.min(...batchIndices);
+            updateModelPoolUI();
+            renderModelPoolSummary();
+
+            // Check if any models remain
+            if (modelPool.getEnabledModels().length === 0) {
+              log(
+                "🛑 All models have been disabled due to errors. Check model names and API key.",
                 "error"
               );
               pauseProcessing(true);
             } else {
-              const wait = err.retryAfterMs || 60000;
-              log(
-                `Gemini rate limit hit (429): ${
-                  err.message
-                }. Waiting ${Math.ceil(wait / 1000)}s before retrying...`,
-                "warning"
-              );
-              startCountdown(wait, () => {
-                if (state.isProcessing && !state.isPaused) processBatch();
-              });
+              setTimeout(processBatch, 200);
             }
           } else {
+            // ---- Other errors: pause ----
             state.errorCount++;
             updateStats();
             log(`Error: ${err.message}`, "error");
@@ -931,12 +1528,16 @@
         }
       }
 
-      async function callGemini(texts, apiKey, model) {
+      // ================================================================
+      //  GEMINI API CALL
+      // ================================================================
+
+      async function callGemini(texts, apiKey, modelConfig) {
         if (!apiKey) {
-          const err = new Error("Missing API key.");
-          throw err;
+          throw new Error("Missing API key.");
         }
-        model = model || "gemini-2.5-flash";
+
+        const model = modelConfig.id;
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
           model
@@ -951,31 +1552,35 @@ CRITICAL RULES:
 4. ONLY change AU spelling/terms to US spelling (e.g., analyse -> analyze, colour -> color).
 5. Do not translate terms like "superannuation" or "BAS", leave them.
 
-Respond ONLY with a valid JSON array of strings, where each string is the translated text in the exact same order as the input. Do not include markdown blocks like \`\`\`json. Just the JSON array.
+Respond ONLY with a valid JSON array of strings, where each string is the translated text in the exact same order as the input. Do not include markdown blocks like \`\`\`json. Just the raw JSON array.
 
 Inputs:
 ${texts.map((t, i) => `${i + 1}. ${JSON.stringify(t)}`).join("\n")}`;
+
+        const requestBody = {
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.1,
+          },
+        };
+
+        // All Gemini Flash models support structured JSON output
+        requestBody.generationConfig.responseMimeType = "application/json";
+        requestBody.generationConfig.responseSchema = {
+          type: "ARRAY",
+          items: { type: "STRING" },
+        };
 
         let response;
         try {
           response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: {
-                temperature: 0.1,
-                responseMimeType: "application/json",
-                responseSchema: {
-                  type: "ARRAY",
-                  items: { type: "STRING" },
-                },
-              },
-            }),
+            body: JSON.stringify(requestBody),
           });
         } catch (networkErr) {
           throw new Error(
-            `Network error calling Gemini API: ${networkErr.message}`
+            `Network error calling ${modelConfig.name}: ${networkErr.message}`
           );
         }
 
@@ -997,18 +1602,36 @@ ${texts.map((t, i) => `${i + 1}. ${JSON.stringify(t)}`).join("\n")}`;
                 if (!isNaN(secs)) retryAfterMs = secs * 1000 + 1000;
               }
             } catch (e) {
-              // ignore parse errors, fall back to default below
+              // ignore
             }
             const rlErr = new Error(
-              `Rate limit exceeded (429): ${errText.slice(0, 400)}`
+              `Rate limit exceeded (429) on ${modelConfig.name}`
             );
             rlErr.isRateLimit = true;
             rlErr.retryAfterMs = retryAfterMs || 60000;
             throw rlErr;
           }
 
+          // Model not found, permission denied, etc. — mark as model error
+          if (
+            response.status === 400 ||
+            response.status === 403 ||
+            response.status === 404
+          ) {
+            const mErr = new Error(
+              `${modelConfig.name} error (${response.status}): ${errText.slice(
+                0,
+                300
+              )}`
+            );
+            mErr.isModelError = true;
+            throw mErr;
+          }
+
           throw new Error(
-            `API Error ${response.status}: ${errText.slice(0, 300)}`
+            `API Error ${response.status} on ${
+              modelConfig.name
+            }: ${errText.slice(0, 300)}`
           );
         }
 
@@ -1016,37 +1639,48 @@ ${texts.map((t, i) => `${i + 1}. ${JSON.stringify(t)}`).join("\n")}`;
 
         const candidate = data?.candidates?.[0];
         if (!candidate) {
-          throw new Error(
-            `No candidates returned by the API. Full response: ${JSON.stringify(
-              data
-            ).slice(0, 300)}`
+          const mErr = new Error(
+            `No candidates returned by ${
+              modelConfig.name
+            }. Response: ${JSON.stringify(data).slice(0, 300)}`
           );
+          mErr.isModelError = true;
+          throw mErr;
         }
 
-        // If the model was blocked/cut off, surface that clearly instead
-        // of throwing an opaque JSON parse error.
         if (candidate.finishReason && candidate.finishReason !== "STOP") {
           throw new Error(
-            `Gemini stopped generating (finishReason: ${candidate.finishReason}). Try a smaller batch size.`
+            `${modelConfig.name} stopped (finishReason: ${candidate.finishReason}). Try a smaller batch size.`
           );
         }
 
-        const resultText = candidate?.content?.parts?.[0]?.text;
+        let resultText = candidate?.content?.parts?.[0]?.text;
         if (!resultText) {
-          throw new Error("Empty response text from Gemini.");
+          throw new Error(`Empty response text from ${modelConfig.name}.`);
         }
+
+        // Strip markdown code fences if present (safety fallback)
+        resultText = resultText
+          .replace(/^```(?:json)?\s*\n?/i, "")
+          .replace(/\n?\s*```\s*$/i, "")
+          .trim();
 
         try {
           return JSON.parse(resultText);
         } catch (e) {
-          throw new Error(
-            `Could not parse Gemini response as JSON: ${resultText.slice(
-              0,
-              200
-            )}`
+          const parseErr = new Error(
+            `Could not parse ${
+              modelConfig.name
+            } response as JSON: ${resultText.slice(0, 200)}`
           );
+          parseErr.isModelError = true;
+          throw parseErr;
         }
       }
+
+      // ================================================================
+      //  START / PAUSE / FINISH
+      // ================================================================
 
       UI.startBtn.addEventListener("click", () => {
         log("Start button clicked.", "info");
@@ -1068,6 +1702,13 @@ ${texts.map((t, i) => `${i + 1}. ${JSON.stringify(t)}`).join("\n")}`;
             return;
           }
 
+          const enabled = modelPool.getEnabledModels();
+          if (enabled.length === 0) {
+            alert("No models enabled! Enable at least one model in the pool.");
+            log("Blocked: no models enabled.", "error");
+            return;
+          }
+
           state.apiKey = UI.apiKeyInput.value.trim();
           localStorage.setItem("gemini_api_key", state.apiKey);
           state.isProcessing = true;
@@ -1078,7 +1719,18 @@ ${texts.map((t, i) => `${i + 1}. ${JSON.stringify(t)}`).join("\n")}`;
           UI.startBtn.classList.add("hidden");
           UI.pauseBtn.classList.remove("hidden");
 
-          log("Started processing...", "info");
+          // Start periodic model pool UI updates
+          clearInterval(state.modelPoolUpdateInterval);
+          state.modelPoolUpdateInterval = setInterval(updateModelPoolUI, 3000);
+
+          const stats = modelPool.getStats();
+          log(
+            `🚀 Started with ${enabled.length} models (combined ${
+              stats.totalRpmMax
+            } RPM, ${stats.totalRpdMax.toLocaleString()} RPD)`,
+            "info"
+          );
+
           processBatch().catch((err) => {
             log(`Fatal error in processing loop: ${err.message}`, "error");
             pauseProcessing(true);
@@ -1093,12 +1745,17 @@ ${texts.map((t, i) => `${i + 1}. ${JSON.stringify(t)}`).join("\n")}`;
       function pauseProcessing(isError = false) {
         state.isPaused = true;
         state.isProcessing = false;
+        state.activeModelId = null;
         stopCountdown();
+        clearInterval(state.modelPoolUpdateInterval);
 
+        UI.activeModelDisplay.classList.add("hidden");
         UI.startBtn.classList.remove("hidden");
         UI.startBtn.disabled = false;
         UI.startBtn.textContent = "Resume Processing";
         UI.pauseBtn.classList.add("hidden");
+
+        updateModelPoolUI();
 
         if (isError) {
           log(
@@ -1112,13 +1769,23 @@ ${texts.map((t, i) => `${i + 1}. ${JSON.stringify(t)}`).join("\n")}`;
 
       function finishProcessing() {
         state.isProcessing = false;
+        state.activeModelId = null;
         stopCountdown();
+        clearInterval(state.modelPoolUpdateInterval);
+
+        UI.activeModelDisplay.classList.add("hidden");
         UI.startBtn.classList.remove("hidden");
-        UI.startBtn.textContent = "Finished";
+        UI.startBtn.textContent = "Finished ✅";
         UI.startBtn.disabled = true;
         UI.pauseBtn.classList.add("hidden");
-        log("Processing complete!", "success");
+
+        updateModelPoolUI();
+        log("🎉 Processing complete! All rows translated.", "success");
       }
+
+      // ================================================================
+      //  DOWNLOAD
+      // ================================================================
 
       UI.downloadBtn.addEventListener("click", () => {
         if (state.csvData.length === 0) return;
