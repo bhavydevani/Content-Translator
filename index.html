@@ -1518,12 +1518,45 @@
               setTimeout(processBatch, 200);
             }
           } else {
-            // ---- Other errors: pause ----
+            // ---- Other errors (timeout, network, etc.): auto-switch model ----
+            model.consecutiveErrors = (model.consecutiveErrors || 0) + 1;
             state.errorCount++;
             updateStats();
-            log(`Error: ${err.message}`, "error");
+
+            if (err.isTimeout) {
+              log(
+                `⏱️ ${model.name} timed out after 3 minutes. Switching to next model...`,
+                "warning"
+              );
+            } else {
+              log(
+                `⚠️ ${model.name} error: ${err.message.slice(0, 150)}. Switching to next model...`,
+                "warning"
+              );
+            }
+
+            if (model.consecutiveErrors >= 3) {
+              modelPool.disableModel(model, err.message.slice(0, 200));
+              log(
+                `❌ ${model.name} auto-disabled after ${model.consecutiveErrors} consecutive errors.`,
+                "error"
+              );
+              renderModelPoolSummary();
+            }
+
             state.currentIndex = Math.min(...batchIndices);
-            pauseProcessing(true);
+            updateModelPoolUI();
+
+            // Check if any models remain
+            if (modelPool.getEnabledModels().length === 0) {
+              log(
+                "🛑 All models have been disabled due to errors. Check model names and API key.",
+                "error"
+              );
+              pauseProcessing(true);
+            } else {
+              setTimeout(processBatch, 200);
+            }
           }
         }
       }
@@ -1571,18 +1604,32 @@ ${texts.map((t, i) => `${i + 1}. ${JSON.stringify(t)}`).join("\n")}`;
           items: { type: "STRING" },
         };
 
+        // 3-minute timeout: auto-abort if model takes too long
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 180000);
+
         let response;
         try {
           response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(requestBody),
+            signal: controller.signal,
           });
         } catch (networkErr) {
+          clearTimeout(timeoutId);
+          if (networkErr.name === "AbortError") {
+            const tErr = new Error(
+              `${modelConfig.name} timed out after 3 minutes`
+            );
+            tErr.isTimeout = true;
+            throw tErr;
+          }
           throw new Error(
             `Network error calling ${modelConfig.name}: ${networkErr.message}`
           );
         }
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           const errText = await response.text();
